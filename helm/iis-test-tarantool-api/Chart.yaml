@@ -1,0 +1,6 @@
+apiVersion: v2
+name: iis-test-tarantool-api
+description: A Helm chart for ecp-smev-adapter
+type: application
+version: 1.0.3
+appVersion: "0.1.0"

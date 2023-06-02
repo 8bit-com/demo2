@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "helper-values.fullname" . }}
+  labels:
+    {{- include "helper-values.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helper-values.selectorLabels" . | nindent 6 }}
+  strategy:
+    {{- toYaml .Values.strategy | nindent 4 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "helper-values.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{- end }}
+      restartPolicy: {{ .Values.image.restartPolicy }}
+      {{- if .Values.initContainer.enable }}
+      initContainers:
+        - name: init-cacerts
+          image: "{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag }}"
+          command: ["/bin/sh", "-c"]
+          args:
+            - cp -R ${JAVA_HOME}/lib/security/* ${JAVA_HOME}/cacerts/;
+              for cert in /opt/java/openjdk/security/*;
+              do keytool -import -noprompt -trustcacerts -alias ${cert} -file ${cert} -keystore ${JAVA_HOME}/cacerts/cacerts -storepass changeit;
+              keytool -list -keystore ${JAVA_HOME}/cacerts/cacerts -alias ${cert};
+              done;
+          volumeMounts:
+            - mountPath: /opt/java/openjdk/cacerts
+              name: cacerts
+            - mountPath: /opt/java/openjdk/security
+              name: crt
+      {{- end }}
+      {{- if .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml .Values.hostAliases | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ template "helper-values.fullname" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: POSTGRES_HOST
+              value: {{ .Values.postgres.host | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.user | quote }}
+            - name: POSTGRES_LIQUIBASE_USER
+              value: {{ .Values.postgres.lqb_user | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgres.password | quote }}
+            - name: KAFKA_SERVER
+              value: {{ .Values.kafka.server | quote }}
+            - name: EA_HOST
+              value: {{ .Values.ea.host | quote}}
+            - name: SOAP_GATE_HOST
+              value: {{ .Values.soapGate.host | quote }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.initContainer.enable }}
+          volumeMounts:
+            - mountPath: /opt/java/openjdk/security
+              name: cacerts
+            - mountPath: {{ .Values.service.rootDir }}/attachments
+              name: attachments
+          {{- end }}
+      {{- if .Values.initContainer.enable }}
+      volumes:
+        - name: cacerts
+          emptyDir: {}
+        - name: crt
+          secret:
+            secretName: {{ .Values.initContainer.secretName }}
+            defaultMode: 0400
+        - name: attachments
+          emptyDir: {}
+
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,95 @@
+strategy:
+  type: Recreate
+
+image:
+  repository: localhost:5000/iis-test-tarantool-api
+  pullPolicy: Always
+  restartPolicy: Always
+  pullSecret:
+
+initContainer:
+  enable: false
+  image:
+    repository: adoptopenjdk/openjdk11
+    tag: alpine-jre
+  secretName: test-hbase-cert
+
+hostAliases:
+
+startupProbe:
+  enabled: true
+  initialDelaySeconds: 250
+  periodSeconds: 16
+  timeoutSeconds: 2
+  failureThreshold: 32
+  successThreshold: 1
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 2
+  periodSeconds: 8
+  timeoutSeconds: 2
+  failureThreshold: 4
+  successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 2
+  periodSeconds: 8
+  timeoutSeconds: 2
+  failureThreshold: 4
+  successThreshold: 1
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+
+service:
+  type: ClusterIP
+  port: 9999
+  jmxPort: 9130
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: 700m
+    memory: 1024Mi
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+monitoring:
+  enable: false
+
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  annotations: {}
+  host: "{{.ingress.host}}"
+  path: /
+  pathType: Prefix
+
+kafka:
+  server: 172.18.32.223:9092
+
+postgres:
+  host: jdbc:postgresql://172.18.32.107:6432/dev_ecp_smev_adapter?prepareThreshold=0
+  user: dev_ecp_smev_adapter_wrk
+  lqb_user: dev_ecp_smev_adapter_service
+  password: Pass123
+
+soapGate:
+  host: 172.18.32.61
+
+ea:
+  host: 172.18.32.31
+
+

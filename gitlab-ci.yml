@@ -1,0 +1,26 @@
+include:
+  - project: 'ecp/iis/iis-templates'
+    ref:  master
+    file: 'smev.maven.template.yaml'
+
+variables:
+  DOCKERFILE_PATH: "Dockerfile"
+  MAVEN_ARTIFACTS: "target"
+  HELM_NAMESPACE:
+    value: "ecp-iis-smev-dev"
+    description: "ecp - используется для деплоя в dev, ecp-gtest - для деплоя в тест"
+    #эти значения выставляются на выбор пользователя, при пустом значении деплой идет в ГЕОП, при наличии переменной - деплой идет в контур соответствующий значению #переменной.
+    #Для изменения значений в values.yml в соответствии с необходимым контуром используются следующие переменные:
+  HELM_ENV_GEOP: "--set \
+        ingress.host=iis-test-tarantool-api.dev.ecp"
+
+maven publish:
+  rules:
+    - when: never
+
+cleanup helm:
+  stage: deploy
+  when: manual
+  allow_failure: true
+  rules:
+    - when: manual

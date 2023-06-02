@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "helper-values.fullname" . }}
+  labels:
+    metadata-aggregate-service-aware: "true"
+    {{- include "helper-values.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
+      protocol: TCP
+      name: http
+    {{- if .Values.monitoring.enable }}
+    - port: {{ .Values.service.jmxPort }}
+      targetPort: 9130
+      protocol: TCP
+      name: jmx
+    {{- end }}
+  selector:
+    {{- include "helper-values.selectorLabels" . | nindent 4 }}
