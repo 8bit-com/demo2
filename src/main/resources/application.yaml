@@ -1,0 +1,7 @@
+server:
+  port: 9999
+
+t_host: tarantool-api.ecp-iis-smev.svc.cluster.local
+t_port: 33011
+t_username: admin
+t_password: tarantool-api-cluster-cookie
