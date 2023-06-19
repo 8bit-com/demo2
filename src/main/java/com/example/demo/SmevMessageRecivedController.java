@@ -20,6 +20,7 @@ public class SmevMessageRecivedController {
 
     @PostMapping( "/saveSMEVMessage")
     public void saveSMEVMessage(@RequestBody SmevMessageRecived smevMessageRecived) {
+        System.out.println(smevMessageRecived);
         ZonedDateTime dateTime = ZonedDateTime.now();
         smevMessageRecived.setDeliveryTimeStamp(dateTime);
         System.out.println(smevMessageRecived.getDeliveryTimeStamp().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
@@ -28,12 +29,17 @@ public class SmevMessageRecivedController {
 
     @GetMapping( "/getAll")
     public List<SmevMessageRecived> getAll() {
-        return smevMessageRecivedService.getAll();
+        return smevMessageRecivedService.get_all_smev_message_recived();
     }
 
     @PostMapping( "/checkExistSMEVMessage")
     public Boolean checkExistSMEVMessage(@RequestBody SmevMessageRecived smevMessageRecived) {
         return smevMessageRecivedService.checkExistSMEVMessage(smevMessageRecived);
+    }
+
+    @PostMapping( "/get_smev_message_recived")
+    public SmevMessageRecived get_smev_message_recived(@RequestBody SmevMessageRecived smevMessageRecived) {
+        return smevMessageRecivedService.get_smev_message_recived(smevMessageRecived);
     }
 
     @PostMapping( "/saveAckRequest")
