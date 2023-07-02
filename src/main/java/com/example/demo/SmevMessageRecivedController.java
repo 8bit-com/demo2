@@ -1,6 +1,12 @@
 package com.example.demo;
 
+import com.bft.springtarantoolapi.model.IisMessageRecived;
 import com.bft.springtarantoolapi.model.SmevMessageRecived;
+import com.bft.springtarantoolapi.model.SmevMessageToIis;
+import com.bft.springtarantoolapi.service.IisMessageRecivedService;
+import com.bft.springtarantoolapi.service.IisMessageToSmevService;
+import com.bft.springtarantoolapi.service.SmevMessageToIisService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import com.bft.springtarantoolapi.service.SmevMessageRecivedService;
@@ -11,23 +17,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/SmevMessageRecivedService")
+@RequiredArgsConstructor
 public class SmevMessageRecivedController {
+
     private final SmevMessageRecivedService smevMessageRecivedService;
 
-    public SmevMessageRecivedController(SmevMessageRecivedService smevMessageRecivedService) {
-        this.smevMessageRecivedService = smevMessageRecivedService;
-    }
-
-    @PostMapping( "/saveSMEVMessage")
-    public void saveSMEVMessage(@RequestBody SmevMessageRecived smevMessageRecived) {
-        System.out.println(smevMessageRecived);
-        ZonedDateTime dateTime = ZonedDateTime.now();
-        smevMessageRecived.setDeliveryTimeStamp(dateTime);
-        System.out.println(smevMessageRecived.getDeliveryTimeStamp().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        smevMessageRecivedService.saveSMEVMessage(smevMessageRecived);
-    }
-
-    @GetMapping( "/getAll")
+    @GetMapping( "/get_all_smev_message_recived")
     public List<SmevMessageRecived> getAll() {
         return smevMessageRecivedService.get_all_smev_message_recived();
     }
@@ -42,6 +37,13 @@ public class SmevMessageRecivedController {
         return smevMessageRecivedService.get_smev_message_recived(smevMessageRecived);
     }
 
+    @PostMapping( "/saveSMEVMessage")
+    public void saveSMEVMessage(@RequestBody SmevMessageRecived smevMessageRecived) {
+        ZonedDateTime dateTime = ZonedDateTime.now();
+        smevMessageRecived.setDeliveryTimeStamp(dateTime);
+        smevMessageRecivedService.saveSMEVMessage(smevMessageRecived);
+    }
+
     @PostMapping( "/saveAckRequest")
     public void saveAckRequest(@RequestBody SmevMessageRecived smevMessageRecived) {
         smevMessageRecivedService.saveAckRequest(smevMessageRecived);
@@ -50,6 +52,11 @@ public class SmevMessageRecivedController {
     @PostMapping( "/faultErrorAckSending")
     public void faultErrorAckSending(@RequestBody SmevMessageRecived smevMessageRecived) {
         smevMessageRecivedService.faultErrorAckSending(smevMessageRecived);
+    }
+
+    @PostMapping( "/faultErrorProcessingSmev")
+    public void faultErrorProcessingSmev(@RequestBody SmevMessageRecived smevMessageRecived) {
+        smevMessageRecivedService.faultErrorProcessingSmev(smevMessageRecived);
     }
 
     @PostMapping( "/httpErrorAckSending")
@@ -61,5 +68,4 @@ public class SmevMessageRecivedController {
     public void endAckSending(@RequestBody SmevMessageRecived smevMessageRecived) {
         smevMessageRecivedService.endAckSending(smevMessageRecived);
     }
-
 }
