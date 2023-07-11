@@ -22,9 +22,11 @@ public class IisMessageRecivedController {
 
     @PostMapping( "/saveIISRequest")
     public void saveSMEVMessage(@RequestBody IisMessageRecived iisMessageRecived) {
-        System.out.println(iisMessageRecived);
-        ZonedDateTime dateTime = ZonedDateTime.now();
-        iisMessageRecived.setStartProcessingDate(dateTime);
         iisMessageRecivedService.saveIISRequest(iisMessageRecived);
+    }
+
+    @PostMapping( "/faultErrorProcessingIIS")
+    public void faultErrorProcessingIIS(@RequestBody IisMessageRecived iisMessageRecived) {
+        iisMessageRecivedService.faultErrorProcessingIIS(iisMessageRecived);
     }
 }

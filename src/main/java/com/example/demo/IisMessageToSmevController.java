@@ -19,4 +19,19 @@ public class IisMessageToSmevController {
     public void endIISMessageProcessing(@RequestBody IisMessageToSmev iisMessageToSmev) {
         iisMessageToSmevService.endIISMessageProcessing(iisMessageToSmev);
     }
+
+    @PostMapping( "/faultErrorSMEVSending")
+    public void faultErrorSMEVSending(@RequestBody IisMessageToSmev iisMessageToSmev) {
+        iisMessageToSmevService.faultErrorSMEVSending(iisMessageToSmev);
+    }
+
+    @PostMapping( "/httpErrorSMEVSending")
+    public void httpErrorSMEVSending(@RequestBody IisMessageToSmev iisMessageToSmev) {
+        iisMessageToSmevService.httpErrorSMEVSending(iisMessageToSmev);
+    }
+
+    @PostMapping( "/endSMEVSending")
+    public void endSMEVSending(@RequestBody IisMessageToSmev iisMessageToSmev) {
+        iisMessageToSmevService.endSMEVSending(iisMessageToSmev);
+    }
 }
