@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.bft.springtarantoolapi.model.IisMessageRecived;
 import com.bft.springtarantoolapi.model.IisMessageToSmev;
 import com.bft.springtarantoolapi.service.IisMessageToSmevService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class IisMessageToSmevController {
     private final IisMessageToSmevService iisMessageToSmevService;
+
+    @PostMapping( "/getMessage")
+    public IisMessageToSmev getMessage(@RequestBody Dto dto) {
+        return iisMessageToSmevService.getMessage(dto.getId());
+    }
 
     @PostMapping( "/endIISMessageProcessing")
     public void endIISMessageProcessing(@RequestBody IisMessageToSmev iisMessageToSmev) {

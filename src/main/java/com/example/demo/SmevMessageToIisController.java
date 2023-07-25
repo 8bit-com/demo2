@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.bft.springtarantoolapi.model.IisMessageRecived;
+import com.bft.springtarantoolapi.model.SmevMessageRecived;
 import com.bft.springtarantoolapi.model.SmevMessageToIis;
 import com.bft.springtarantoolapi.service.IisMessageRecivedService;
 import com.bft.springtarantoolapi.service.SmevMessageToIisService;
@@ -17,6 +18,11 @@ import java.time.ZonedDateTime;
 @RequiredArgsConstructor
 public class SmevMessageToIisController {
     private final SmevMessageToIisService smevMessageToIisService;
+
+    @PostMapping( "/getMessage")
+    public SmevMessageToIis getMessage(@RequestBody Dto dto) {
+        return smevMessageToIisService.getMessage(dto.getId());
+    }
 
     @PostMapping( "/endSMEVMessageProcessing")
     public void endSMEVMessageProcessing(@RequestBody SmevMessageToIis smevMessageToIis) {

@@ -20,6 +20,11 @@ public class IisMessageRecivedController {
 
     private final IisMessageRecivedService iisMessageRecivedService;
 
+    @PostMapping( "/getMessage")
+    public IisMessageRecived getMessage(@RequestBody Dto dto) {
+        return iisMessageRecivedService.getMessage(dto.getId());
+    }
+
     @PostMapping( "/saveIISRequest")
     public void saveSMEVMessage(@RequestBody IisMessageRecived iisMessageRecived) {
         iisMessageRecivedService.saveIISRequest(iisMessageRecived);

@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.bft.springtarantoolapi.model.IisMessageRecived;
+import com.bft.springtarantoolapi.model.IisMessageToSmev;
 import com.bft.springtarantoolapi.model.SmevMessageRecived;
 import com.bft.springtarantoolapi.model.SmevMessageToIis;
 import com.bft.springtarantoolapi.service.IisMessageRecivedService;
@@ -21,6 +22,11 @@ import java.util.List;
 public class SmevMessageRecivedController {
 
     private final SmevMessageRecivedService smevMessageRecivedService;
+
+    @PostMapping( "/getMessage")
+    public SmevMessageRecived getMessage(@RequestBody Dto dto) {
+        return smevMessageRecivedService.getMessage(dto.getId());
+    }
 
     @GetMapping( "/get_all_smev_message_recived")
     public List<SmevMessageRecived> getAll() {
