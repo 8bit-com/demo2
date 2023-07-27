@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>com.bft</groupId>
 			<artifactId>spring-tarantool-api</artifactId>
-			<version>0.0.42-SNAPSHOT</version>
+			<version>0.0.43-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

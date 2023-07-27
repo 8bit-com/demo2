@@ -26,4 +26,8 @@ public class SharedController {
         sharedService.deleteMessage(dto.getSpace(), dto.getId());
     }
 
+    @PostMapping( "/getCount")
+    public Integer getCount(@RequestBody Dto dto) {
+        return sharedService.getCount(dto.getSpace());
+    }
 }
