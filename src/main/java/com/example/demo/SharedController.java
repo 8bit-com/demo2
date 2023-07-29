@@ -15,15 +15,15 @@ public class SharedController {
 
     @PostMapping( "/getField")
     public String getField(@RequestBody Dto dto) {
-        System.out.println(dto.getSpace() + dto.getId() + dto.getField());
-        String str = sharedService.getField(dto.getSpace(), dto.getId(), dto.getField());
+        System.out.println(dto.getSpace() + dto.getValue() + dto.getField());
+        String str = sharedService.getField(dto.getSpace(), dto.getValue(), dto.getField());
         System.out.println(str);
         return str;
     }
 
     @PostMapping( "/deleteMessage")
     public void deleteMessage(@RequestBody Dto dto) {
-        sharedService.deleteMessage(dto.getSpace(), dto.getId());
+        sharedService.deleteMessage(dto.getSpace(), dto.getValue());
     }
 
     @PostMapping( "/getCount")
@@ -33,6 +33,6 @@ public class SharedController {
 
     @PostMapping( "/selectMsg")
     public String selectMsg(@RequestBody Dto dto) {
-        return sharedService.selectMsg(dto.getSpace(), dto.getField(), dto.getId());
+        return sharedService.selectMsg(dto.getSpace(), dto.getField(), dto.getValue());
     }
 }

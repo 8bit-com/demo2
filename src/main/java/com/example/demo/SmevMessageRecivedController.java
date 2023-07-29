@@ -25,7 +25,7 @@ public class SmevMessageRecivedController {
 
     @PostMapping( "/getMessage")
     public SmevMessageRecived getMessage(@RequestBody Dto dto) {
-        return smevMessageRecivedService.getMessage(dto.getId());
+        return smevMessageRecivedService.getMessage(dto.getValue());
     }
 
     @GetMapping( "/get_all_smev_message_recived")
@@ -48,11 +48,6 @@ public class SmevMessageRecivedController {
         ZonedDateTime dateTime = ZonedDateTime.now();
         smevMessageRecived.setDeliveryTimeStamp(dateTime);
         smevMessageRecivedService.saveSMEVMessage(smevMessageRecived);
-    }
-
-    @PostMapping( "/saveAckRequest")
-    public void saveAckRequest(@RequestBody SmevMessageRecived smevMessageRecived) {
-        smevMessageRecivedService.saveAckRequest(smevMessageRecived);
     }
 
     @PostMapping( "/faultErrorAckSending")

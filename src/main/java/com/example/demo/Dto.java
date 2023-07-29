@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class Dto {
     private String space;
-    private String id;
+    private String value;
     private String field;
 }

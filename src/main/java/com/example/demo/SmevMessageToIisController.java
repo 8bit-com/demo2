@@ -21,7 +21,7 @@ public class SmevMessageToIisController {
 
     @PostMapping( "/getMessage")
     public SmevMessageToIis getMessage(@RequestBody Dto dto) {
-        return smevMessageToIisService.getMessage(dto.getId());
+        return smevMessageToIisService.getMessage(dto.getValue());
     }
 
     @PostMapping( "/endSMEVMessageProcessing")

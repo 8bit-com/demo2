@@ -22,7 +22,7 @@ public class IisMessageRecivedController {
 
     @PostMapping( "/getMessage")
     public IisMessageRecived getMessage(@RequestBody Dto dto) {
-        return iisMessageRecivedService.getMessage(dto.getId());
+        return iisMessageRecivedService.getMessage(dto.getValue());
     }
 
     @PostMapping( "/saveIISRequest")
