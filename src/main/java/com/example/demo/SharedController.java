@@ -30,4 +30,9 @@ public class SharedController {
     public Integer getCount(@RequestBody Dto dto) {
         return sharedService.getCount(dto.getSpace());
     }
+
+    @PostMapping( "/selectMsg")
+    public String selectMsg(@RequestBody Dto dto) {
+        return sharedService.selectMsg(dto.getSpace(), dto.getField(), dto.getId());
+    }
 }
